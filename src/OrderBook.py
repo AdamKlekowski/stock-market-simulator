@@ -1,0 +1,3 @@
+class OrderBook:
+    BID = []
+    ASK = []
