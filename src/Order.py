@@ -23,3 +23,7 @@ class Order:
 
     def getPriceRange(self):
         return self.__price__
+
+#dodal Dominik
+    def changeQuantity(self, newQuantity):
+        self.__quantity__ = newQuantity
