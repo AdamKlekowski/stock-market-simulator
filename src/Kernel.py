@@ -1,72 +1,66 @@
-from typing import List, Any
+import logging
+import threading
+import time
+import Trader
+import PrzemekTrader
 
-from OrderBook import *
+
+NUM_OF_AGENTS = 3
+NUM_OF_ITERATIONS = 1
 
 
 class Kernel:
-    __order_book__ = OrderBook()
+    def __init__(self):
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s (%(threadName)-2s) %(message)s',
+                            datefmt="%H:%M:%S")
 
-    def getOrderBook(self):
-        return self.__order_book__
+        logging.debug("the begin of simulation")
+        logging.debug("numbers of traders: " + str(NUM_OF_AGENTS))
+        logging.debug("numbers of iterations: " + str(NUM_OF_ITERATIONS))
+        self.progress = 0
+        time.sleep(0.5)
 
-    def auction(self, stock):
-        stockBid: List[Any] = []
-        stockAsk: List[Any] = []
-        for bid in self.__order_book__.getBID():
-            print(bid)
-            if bid.getStock() == stock:                                                     # wybiera tylko wybrana forme
-                if not stockBid:                                                            # spr czy lista jest pusta
-                    stockBid.append(bid)                                                    # dodaje
-                else:                                                                       # przeszukuje liste by zajac odpowiedni priorytet
-                    place = 0
-                    for bidFromStockBid in stockBid:
-                        if bidFromStockBid.getPriceRange() < bid.getPriceRange():           # bid jest najlepsze jak jest najwieksze
-                            break
-                        place += 1
-                    stockBid.insert(place, bid)
+        self.time_begin = time.time()
+        self.condition = threading.Condition()
+        self.threads = []
+        for i in range(0, NUM_OF_AGENTS):
+            self.threads.append(PrzemekTrader.PrzemekTrader(i, self.condition))
 
-        for ask in self.__order_book__.getASK():                                            # robi to samo tylko dla ask
-            print(ask)
-            if ask.getStock() == stock:
-                if not stockAsk:
-                    stockAsk.append(ask)
-                else:
-                    place = 0
-                    for askFromStockAsk in stockAsk:
-                        if askFromStockAsk.getPriceRange() > ask.getPriceRange():           #ask jest najlepsze jak jest najmniejsze
-                            break
-                        place += 1
-                    stockAsk.insert(place, ask)
-        while True:                                                                         #porownywanie najwyzej priorytetowanych
+        for t in self.threads:
+            t.start()
 
-            if (not stockBid) and (not stockAsk):                                           #spr czy zostaly jeszcze jakies bid albo ask
-                print("not enough offers")
-                break
-            elif stockBid[0].getPriceRange() < stockAsk[0].getPriceRange():                   #zaden bid nie odpowiada najnizszemu askowi
-                print("the spread of " + stock + " is " + str(stockAsk[0].getPriceRange()-stockBid[0].getPriceRange()))
-                break
+        for i in range(0, NUM_OF_ITERATIONS):
+            self.wakeUpAll(i)
+            time.sleep(0.005)
+        self.endSimulation()
 
-            else:
-                if stockBid[0].getQuantity() < stockAsk[0].getQuantity():                    #bid<ask
-                    print("firma " + stockBid[0].getOrderID() + " kupuje " + str(stockBid[0].getQuantity())
-                          + " od firmy " + stockAsk[0].getOrderID())
-                    self.__order_book__.removeBID(stockBid[0])                               #bid usuwany, ask aktualizowany
-                    self.__order_book__.changeQuantityASK(stockBid[0], stockAsk[0].getQuantity() - stockBid[0].getQuantity())
-                    stockBid.pop(0)
+    def wakeUpAll(self, i):
+        with self.condition:
+            #logging.debug('New turn: ' + str(i))
+            self.condition.notifyAll()
 
-                elif stockBid[0].getQuantity() > stockAsk[0].getQuantity():                  #aks<bid
-                    print("firma " + stockBid[0].getOrderID() + " kupuje " + str(stockAsk[0].getQuantity())
-                          + " od firmy " + stockAsk[0].getOrderID())
-                    self.__order_book__.removeASK(stockAsk[0])                               #bid aktualizwoany, ask usuwany
-                    self.__order_book__.changeQuantityBID(stockBid[0] ,stockBid[0].getQuantity() - stockAsk[0].getQuantity())
-                    stockAsk.pop(0)
+            if i/NUM_OF_ITERATIONS >= 0.25 and self.progress == 0:
+                logging.debug("25% of simulation")
+                self.progress += 1
+            elif i/NUM_OF_ITERATIONS >= 0.50 and self.progress == 1:
+                logging.debug("50% of simulation")
+                self.progress += 1
+            elif i / NUM_OF_ITERATIONS >= 0.75 and self.progress == 2:
+                logging.debug("75% of simulation")
+                self.progress += 1
 
-                else:                                                                        #bid=ask
-                    print("firma " + stockBid[0].getOrderID() + " kupuje " + str(stockBid[0].getQuantity())
-                          + " od firmy " + stockAsk[0].getOrderID())
-                    self.__order_book__.removeBID(stockBid[0])                               #bid usuwany, aks usuwany
-                    self.__order_book__.removeASK(stockAsk[0])
-                    stockBid.pop(0)
-                    stockAsk.pop(0)
+    def endSimulation(self):
+        time_end = time.time()
+        logging.debug("time of simulation: " + str(time_end - self.time_begin))
+
+        for t in self.threads:
+            t.stop()
+        self.wakeUpAll(9999)
+        for t in self.threads:
+            t.join()
+        logging.debug("the end of simulation")
 
 
+if __name__ == "__main__":
+    kernel = Kernel()
