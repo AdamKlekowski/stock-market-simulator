@@ -1,33 +1,28 @@
 import threading
-from Order import *
-from OrderBook import *
+import logging
 
 
-class Trader(threading.Thread):
-    __public_order_book__ = []
-
-    def __init__(self, _traderID, _portfolio, _money, _order_book=OrderBook):
+class Trader (threading.Thread):
+    def __init__(self, threadID, condition):
         threading.Thread.__init__(self)
-        if type(_traderID) != int:
-            raise TypeError("TraderID is a integer, different type given")
-        if type(_portfolio):
-            pass
-        if type(_money) != float:
-            raise TypeError("Money is a float, different type given")
-        self.__traderID__ = _traderID
-        self.__portfolio__ = _portfolio
-        self.__money__ = _money
-        self.__public_order_book__ = []
-        self.__public_order_book__ = _order_book
+        self.threadID = threadID
+        self.cond = condition
+        self.isStop = False
 
-    def getMoney(self):
-        return self.__money__
+        self.money = 0
+        self.portfolio = {}
 
-    def getTraderID(self):
-        return self.__traderID__
-
-    def getPortfolio(self):
-        return self.__portfolio__
+    def stop(self):
+        self.isStop = True
 
     def run(self):
-        pass
+        while True:
+            with self.cond:
+                self.cond.wait()
+                if self.isStop:
+                    break
+                # work here
+                self.playOnStock()
+
+    def playOnStock(self):
+        raise NotImplementedError()
