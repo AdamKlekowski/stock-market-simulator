@@ -3,22 +3,11 @@ from Order import Order
 
 class OrderBook:
     def __init__(self):
-        BID = []
-        ASK = []
-        # dodane do testkow kernela
-        BID = [Order("b1", "1", "IBM", 1, 150), Order("b2", "2", "IBM", 2, 140), Order("b3", "3", "IBM", 2, 170)]
-        ASK = [Order("a1", "4", "IBM", 1, 140), Order("a2", "5", "IBM", 3, 130), Order("a3", "6", "IBM", 1, 170)]
+        self.BID = []
+        self.ASK = []
 
     def addOrder(self, _type, _order):
-        if type(_type) != str:
-            raise TypeError("Type is a string, different type given")
-
-        if _type == "BID":
-            self.BID.append(_order)
-        elif _type == "ASK":
-            self.ASK.append(_order)
-        else:
-            raise ValueError("Type should be equal BID or ASK, different type given")
+        raise NotImplementedError()
 
     def getBID(self):
         return self.BID
@@ -33,12 +22,21 @@ class OrderBook:
     def removeASK(self, _order):
         self.ASK.remove(_order)
 
-    def changeQuantityBID(self, order, newQuantity):
-        for bid in self.BID:
-            if bid.getStock() == order.getStock():
-                bid.changeQuantity(newQuantity)
+    def changeQuantityBID(self, newQuantity):
+        self.BID[0].changeQuantity(newQuantity)
+        #TODO dopytać jak działa giełda
+        #for bid in self.BID:
+        #    if bid.getStock() == order.getStock():
+        #       bid.changeQuantity(newQuantity)
 
-    def changeQuantityASK(self, order, newQuantity):
-        for ask in self.ASK:
-            if ask.getStock() == order.getStock():
-                ask.changeQuantity(newQuantity)
+    def changeQuantityASK(self, newQuantity):
+        self.ASK[0].changeQuantity(newQuantity)
+
+    def drawOrderBook(self):
+        print("ASKS:")
+        for i in range(0, len(self.ASK)):
+            print(str(i) + ". " + str(self.ASK[i].price) + "  " + str(self.ASK[i].traderID))
+        print("BIDS:")
+        for i in range(0, len(self.BID)):
+            print(str(i) + ". " + str(self.BID[i].price) + "  " + str(self.BID[i].traderID))
+
