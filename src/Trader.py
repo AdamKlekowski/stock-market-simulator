@@ -1,9 +1,10 @@
 import threading
 import logging
+import MarketOrderBook
 
 
-class Trader (threading.Thread):
-    def __init__(self, threadID, condition):
+class Trader(threading.Thread):
+    def __init__(self, threadID, orderBook, condition):
         threading.Thread.__init__(self)
         self.lock = threading.Lock()
         self.threadID = threadID
@@ -11,6 +12,7 @@ class Trader (threading.Thread):
         self.isStop = False
         self.money = 0
         self.portfolio = {}
+        self.orderBook = orderBook
 
     def stop(self):
         self.isStop = True
