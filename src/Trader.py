@@ -1,14 +1,12 @@
 import threading
-import logging
-import MarketOrderBook
 
 
 class Trader(threading.Thread):
-    def __init__(self, threadID, orderBook, condition):
+    def __init__(self, threadID, cb, orderBook, delay):
         threading.Thread.__init__(self)
-        self.lock = threading.Lock()
+        self.cb = cb
         self.threadID = threadID
-        self.cond = condition
+        self.time_delay = delay
         self.isStop = False
         self.money = 0
         self.portfolio = {}
@@ -19,12 +17,34 @@ class Trader(threading.Thread):
 
     def run(self):
         while True:
-            with self.cond:
-                self.cond.wait()
+            with self.cb.condition:
+                self.cb.condition.wait()
+                self.parseMsg()
                 if self.isStop:
                     break
-                # work here
-                self.playOnStock()
+                if self.cb.time % self.time_delay == 0:
+                    self.playOnStock()
+                self.cb.mark_attendance_counter()
 
     def playOnStock(self):
         raise NotImplementedError()
+
+    def addStock(self, name, quantity):
+        if name in self.portfolio:
+            self.portfolio[name] += quantity
+        else:
+            self.portfolio[name] = quantity
+
+    def parseMsg(self):
+        messages = self.cb.getMessage(self.threadID)
+        if messages:
+            for m in messages:
+                content = m.split(":")
+
+                if content[0] == "BUY":
+                    self.addStock(str(content[1]), int(content[2]))
+                elif content[0] == "SELL":
+                    self.money += int(content[1])
+
+    def __str__(self):
+        return str(self.threadID) + " : " + str(self.money) + " : " + str(self.portfolio)
