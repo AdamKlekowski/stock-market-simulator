@@ -7,10 +7,9 @@ from MarketOrderBook import MarketOrderBook
 
 
 NUM_NOISY_TRADER = 100
-NUM_PRZEMEK_TRADER = 100
+NUM_PRZEMEK_TRADER = 200
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER
 NUM_OF_ITERATIONS = 50
-
 
 
 class Kernel:
@@ -94,7 +93,3 @@ class Kernel:
     def drawMarket(self):
         for name, market in self.orderBook.items():
             market.drawOrderBook()
-
-
-if __name__ == "__main__":
-    kernel = Kernel()
