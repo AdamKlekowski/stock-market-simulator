@@ -2,13 +2,13 @@ import threading
 
 
 class Trader(threading.Thread):
-    def __init__(self, threadID, cb, orderBook, delay):
+    def __init__(self, threadID, cb, orderBook, delay, money):
         threading.Thread.__init__(self)
         self.cb = cb
         self.threadID = threadID
         self.time_delay = delay
         self.isStop = False
-        self.money = 0
+        self.money = money
         self.portfolio = {}
         self.orderBook = orderBook
 

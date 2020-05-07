@@ -1,5 +1,8 @@
+from CommunicationBox import CommunicationBox
 from Kernel import Kernel
-
+from Plot import Plot
 
 if __name__ == "__main__":
-    kernel = Kernel()
+    cb = CommunicationBox()
+    kernel = Kernel(cb)
+    Plot.displayPlot(cb)
