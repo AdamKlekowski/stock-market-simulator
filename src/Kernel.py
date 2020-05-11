@@ -6,10 +6,10 @@ import PrzemekTrader
 from MarketOrderBook import MarketOrderBook
 
 
-NUM_NOISY_TRADER = 100
-NUM_PRZEMEK_TRADER = 200
+NUM_NOISY_TRADER = 400
+NUM_PRZEMEK_TRADER = 600
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER
-NUM_OF_ITERATIONS = 50
+NUM_OF_ITERATIONS = 60
 
 
 class Kernel:
@@ -42,8 +42,8 @@ class Kernel:
                 time.sleep(0.001)
         self.endSimulation()
 
-        for t in self.threads:
-            print(t)
+        #for t in self.threads:
+        #    print(t)
 
     def endSimulation(self):
         for t in self.threads:
@@ -60,28 +60,31 @@ class Kernel:
             sumQuantity = 0
             sumPrice = 0
             while True:
-                    if (not bids) or (not asks):
-                        #print("not enough offers - " + str(name) )
+                    if (not bids) or (not asks):                                                                        #nie ma wystarczacej ilosci bidow albo askow
                         break
-                    elif bids[0].getPrice() < asks[0].getPrice():
-                        #print("the spread of " + str(name) + " is " + str(market.getASK()[0].getPrice() - market.getBID()[0].getPrice()))
+                    elif bids[0].getPrice() < asks[0].getPrice():                                                       #cena kupujacych jest mniejsza od ceny sprzedajacych
                         break
                     else:
-                        if bids[0].getQuantity() < asks[0].getQuantity():
-                            #print("firma " + str(bids[0].getOrderID()) + " kupuje " + str(bids[0].getQuantity()) + " od firmy " + str(asks[0].getOrderID()))
-                            market.removeBID(market.getBID()[0])
-                            market.changeQuantityASK(asks[0].getQuantity() - bids[0].getQuantity())
-
-                        elif bids[0].getQuantity() > asks[0].getQuantity():  # aks<bid
-                            #print("firma " + str(bids[0].getOrderID()) + " kupuje " + str(asks[0].getQuantity()) + " od firmy " + str(asks[0].getOrderID()))
-                            market.removeASK(asks[0])
-                            market.changeQuantityBID(bids[0].getQuantity() - asks[0].getQuantity())
-                        else:
+                        if bids[0].getQuantity() < asks[0].getQuantity():                                               #sprzedajacy ma więcej akcji od kupujacego
                             self.cb.addMessage(bids[0].getOrderID(), "BUY:" + name + ":" + str(bids[0].getQuantity()))
-                            self.cb.addMessage(asks[0].getOrderID(), "SELL:" + str(asks[0].price))
-                            sumPrice += asks[0].price
+                            self.cb.addMessage(asks[0].getOrderID(), "SELL:" + str(int(asks[0].getPrice() * bids[0].getQuantity())))
                             sumQuantity += bids[0].getQuantity()
-                            #print("firma " + str(bids[0].getOrderID()) + " kupuje " + str(bids[0].getQuantity()) + " od firmy " + str(asks[0].getOrderID()))
+                            sumPrice += asks[0].price * bids[0].getQuantity()
+                            market.changeQuantityASK(asks[0].getQuantity() - bids[0].getQuantity())
+                            market.removeBID(market.getBID()[0])
+
+                        elif bids[0].getQuantity() > asks[0].getQuantity():                                             #kupujacy ma wiecej akcji od sprzedajacego
+                            self.cb.addMessage(bids[0].getOrderID(), "BUY:" + name + ":" + str(asks[0].getQuantity()))
+                            self.cb.addMessage(asks[0].getOrderID(), "SELL:" + str(int(asks[0].getPrice()) * asks[0].getQuantity()))
+                            sumQuantity += asks[0].getQuantity()
+                            sumPrice += asks[0].price * asks[0].getQuantity()
+                            market.changeQuantityBID(bids[0].getQuantity() - asks[0].getQuantity())
+                            market.removeASK(asks[0])
+                        else:                                                                                           #oboje kupujacy i sprzedajacy maja tyle samo akcji
+                            self.cb.addMessage(bids[0].getOrderID(), "BUY:" + name + ":" + str(bids[0].getQuantity()))
+                            self.cb.addMessage(asks[0].getOrderID(), "SELL:" + str(int(asks[0].getPrice()) * bids[0].getQuantity()))
+                            sumQuantity += bids[0].getQuantity()
+                            sumPrice += asks[0].price * bids[0].getQuantity()
                             market.removeBID(market.getBID()[0])
                             market.removeASK(market.getASK()[0])
             if sumQuantity:
