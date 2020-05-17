@@ -3,7 +3,7 @@ import time
 from Trader import Trader
 from Order import Order
 import random
-
+import numpy as np
 
 class NoisyTrader(Trader):
     def playOnStock(self):

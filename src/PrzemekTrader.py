@@ -26,10 +26,10 @@ class PrzemekTrader(Trader):
             self.x=self.x.reshape((1,1,-1))
             self.valIBM=self.scaler.inverse_transform(self.model.predict(self.x))[0,0]
             if self.valIBM>self.prIBM:
-                order = Order(self.threadID, self.threadID, 4, self.prIBM)
+                order = Order(self.threadID, self.threadID, 4, self.prIBM+np.random.normal(0,0.1))
                 self.orderBook["IBM"].addOrder("BID", order)
             else:
-                order = Order(self.threadID, self.threadID, 4, self.prIBM)
+                order = Order(self.threadID, self.threadID, 4, self.prIBM+np.random.normal(0,0.1))
                 self.orderBook["IBM"].addOrder("ASK", order)
         finally:
             self.cb.lock.release()
