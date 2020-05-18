@@ -1,16 +1,15 @@
 import random
 import time
-import numpy
+import sys
 import NoisyTrader
 import PrzemekTrader
 from MarketOrderBook import MarketOrderBook
 
 
-NUM_NOISY_TRADER = 400
-NUM_PRZEMEK_TRADER = 600
+NUM_NOISY_TRADER = 1000
+NUM_PRZEMEK_TRADER = 100
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER
-NUM_OF_ITERATIONS = 60
-
+NUM_OF_ITERATIONS = 100
 
 class Kernel:
     def __init__(self, cb):
@@ -21,15 +20,20 @@ class Kernel:
             "IBM": MarketOrderBook(),
             "ABB": MarketOrderBook()
         }
-
+        for i,j in zip([122.78,122.78,122.77,122.65,122.77],[117.76,117.78,117.81,117.79,117.81]):
+            self.cb.addAveragePrice('IBM', i)
+            self.cb.addAveragePrice('ABB', j)
+        time
         for i in range(0, NUM_PRZEMEK_TRADER):
             self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([1, 2, 3]), random.choice([10000, 20000])))
 
         for i in range(NUM_PRZEMEK_TRADER, NUM_NOISY_TRADER+NUM_PRZEMEK_TRADER):
-            self.threads.append(NoisyTrader.NoisyTrader(i, self.cb, self.orderBook, random.choice([4, 5]), random.choice([1000, 2000])))
+            self.threads.append(NoisyTrader.NoisyTrader(i, self.cb, self.orderBook, random.choice([1, 1]), random.choice([1000, 2000])))
 
         for t in self.threads:
             t.start()
+
+        progress=list("[__________]")
 
         for i in range(0, NUM_OF_ITERATIONS):
             self.cb.clear_counter()
@@ -40,6 +44,9 @@ class Kernel:
                     self.transations()
                     isWait = False
                 time.sleep(0.001)
+            progress[int(i/NUM_OF_ITERATIONS*10)+1]='*'
+            print('\r'+"".join(progress),end='')
+        print("")
         self.endSimulation()
 
         #for t in self.threads:
@@ -90,7 +97,8 @@ class Kernel:
             if sumQuantity:
                 self.cb.addAveragePrice(str(name), round(sumPrice/sumQuantity, 2))
             else:
-                self.cb.addAveragePrice(str(name), numpy.nan)
+                pass
+                #self.cb.addAveragePrice(str(name), numpy.nan)
 
     """test"""
     def drawMarket(self):
