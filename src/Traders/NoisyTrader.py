@@ -13,11 +13,15 @@ class NoisyTrader(Trader):
                 if stock_name in self.portfolio and self.portfolio[stock_name] > quantity:
                     last_price = self.cb.stock_exchange_listing[stock_name][-1]
 
-                    oil_diff = self.cb.oil_prices[self.cb.time+1] - self.cb.oil_prices[self.cb.time]
-                    if oil_diff > 0:
-                        price = random.choice([last_price * 1.10, last_price * 1.0])
+                    oil_diff = self.cb.oil_prices[self.cb.time + 1] - self.cb.oil_prices[self.cb.time]
+                    if oil_diff > 5:
+                        price = last_price * random.choice([1.20, 1.15, 1.1])
+                    elif 0 < oil_diff < 5:
+                        price = last_price * random.choice([1.12, 1.1, 1.05, 1, 0.999])
+                    elif 0 > oil_diff > -5:
+                        price = last_price * random.choice([1.03, 1, 0.99])
                     else:
-                        price = random.choice([last_price * 1.05, last_price * 1.0, last_price * 0.95])
+                        price = last_price * random.choice([0.99, 0.97, 0.9])
 
                     min_price, max_price = self.cb.min_max[stock_name]
                     if price > max_price:
@@ -32,10 +36,14 @@ class NoisyTrader(Trader):
                 last_price = self.cb.stock_exchange_listing[stock_name][-1]
 
                 oil_diff = self.cb.oil_prices[self.cb.time + 1] - self.cb.oil_prices[self.cb.time]
-                if oil_diff > 0:
-                    price = random.choice([last_price * 1.20, last_price * 1.1])
+                if oil_diff > 5:
+                    price = last_price * random.choice([1.20, 1.15, 1.1])
+                elif 0 < oil_diff < 5:
+                    price = last_price * random.choice([1.12, 1.1, 1.05, 1, 0.999])
+                elif 0 > oil_diff > -5:
+                    price = last_price * random.choice([1.03, 1, 0.99])
                 else:
-                    price = random.choice([last_price * 1.05, last_price * 1.0, last_price * 0.95])
+                    price = last_price * random.choice([0.99, 0.97, 0.9])
 
                 min_price, max_price = self.cb.min_max[stock_name]
                 if price > max_price:

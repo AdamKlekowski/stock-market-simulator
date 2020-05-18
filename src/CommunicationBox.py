@@ -11,8 +11,8 @@ class CommunicationBox:
         self.messages = {}
         self.stock_exchange_listing = {}    # notowania giełdowe
         self.min_max = {
-            'IBM': (110, 135),
-            'ABB': (10, 20)
+            'IBM': (105, 135),
+            'ABB': (10, 25)
         }
         self.oil_prices = pd.read_csv("data/oil_prices.csv")["price"]
 
