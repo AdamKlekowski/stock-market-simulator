@@ -9,10 +9,10 @@ class NoisyTrader(Trader):
         try:
             if random.choice(["ASK", "BID"]) == "ASK":
                 stock_name = random.choice(["ABB", "IBM"])
-                quantity = random.choice([1, 2])
+                quantity = random.choice([1])
                 if stock_name in self.portfolio and self.portfolio[stock_name] > quantity:
                     last_price = self.cb.stock_exchange_listing[stock_name][-1]
-                    price = random.choice([last_price*1.30, last_price * 1.10, last_price * 1.0, last_price * 0.95])
+                    price = random.choice([last_price * 1.10, last_price * 1.0, last_price * 0.99])
 
                     min_price, max_price = self.cb.min_max[stock_name]
                     if price > max_price:
@@ -25,7 +25,7 @@ class NoisyTrader(Trader):
             else:
                 stock_name = random.choice(["ABB", "IBM"])
                 last_price = self.cb.stock_exchange_listing[stock_name][-1]
-                price = random.choice([last_price*1.30, last_price*1.10, last_price * 1.0, last_price * 0.95])
+                price = random.choice([last_price*1.2, last_price*1.10, last_price*1.0])
 
                 min_price, max_price = self.cb.min_max[stock_name]
                 if price > max_price:
@@ -33,7 +33,7 @@ class NoisyTrader(Trader):
                 elif price < min_price:
                     price = min_price
 
-                quantity = random.choice([1, 2])
+                quantity = random.choice([1])
                 if quantity*price < self.money:
                     order = Order(self.threadID, self.threadID, quantity, price, self.cb.time)
                     self.orderBook[stock_name].addOrder("BID", order)

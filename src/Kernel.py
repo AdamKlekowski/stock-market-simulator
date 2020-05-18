@@ -7,7 +7,7 @@ from Books.MarketOrderBook import MarketOrderBook
 NUM_NOISY_TRADER = 1000
 NUM_PRZEMEK_TRADER = 0
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER
-NUM_OF_ITERATIONS = 250
+NUM_OF_ITERATIONS = 400
 
 
 class Kernel:
@@ -19,17 +19,17 @@ class Kernel:
             "IBM": MarketOrderBook(),
             "ABB": MarketOrderBook()
         }
-        for i, j in zip([122.78, 122.78, 122.77, 122.65, 122.77], [117.76, 117.78, 117.81, 117.79, 117.81]):
+        for i, j in zip([122.78, 122.78, 122.77, 122.65, 122.77], [17.76, 17.78, 17.81, 17.79, 17.81]):
             self.cb.addAveragePrice('IBM', i)
             self.cb.addAveragePrice('ABB', j)
 
         for i in range(0, NUM_PRZEMEK_TRADER):
             portfolio = {random.choice(["IBM", "ABB"]): random.choice([20, 30])}
-            self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([2, 3]), random.choice([10000, 20000]), portfolio))
+            self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([1, 2, 3]), random.choice([10000, 20000]), portfolio))
 
         for i in range(NUM_PRZEMEK_TRADER, NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER):
             portfolio = {random.choice(["IBM", "ABB"]): random.choice([10, 20, 40])}
-            self.threads.append(NoisyTrader.NoisyTrader(i, self.cb, self.orderBook, random.choice([1, 2]), random.choice([1000, 2000, 5000]), portfolio))
+            self.threads.append(NoisyTrader.NoisyTrader(i, self.cb, self.orderBook, random.choice([2, 3, 5]), random.choice([1000, 2000, 5000]), portfolio))
 
         for t in self.threads:
             t.start()
@@ -42,7 +42,7 @@ class Kernel:
             is_wait = True
             while is_wait:
                 if self.cb.attendance_counter == NUM_OF_AGENTS:
-                    self.transations()
+                    self.transactions()
                     is_wait = False
                 time.sleep(0.001)
             self.clearOrders()
@@ -58,7 +58,7 @@ class Kernel:
         for t in self.threads:
             t.join()
 
-    def transations(self):
+    def transactions(self):
         for name, market in self.orderBook.items():
             bids = market.getBID()
             asks = market.getASK()
@@ -108,12 +108,12 @@ class Kernel:
             asks = market.getASK()
 
             for order in bids:
-                if abs(order.timestamp-self.cb.time) > 5:
+                if abs(order.timestamp-self.cb.time) > 10:
                     self.cb.addMessage(order.traderID, "SELL:" + str(order.price*order.quantity))
                     bids.remove(order)
 
             for order in asks:
-                if abs(order.timestamp-self.cb.time) > 5:
+                if abs(order.timestamp-self.cb.time) > 10:
                     self.cb.addMessage(order.traderID, "BUY:" + str(name) + ":" + str(order.quantity))
                     asks.remove(order)
 
