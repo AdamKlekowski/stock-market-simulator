@@ -42,9 +42,9 @@ class Trader(threading.Thread):
                 content = m.split(":")
 
                 if content[0] == "BUY":
-                    self.addStock(str(content[1]), int(content[2]))
+                    self.addStock(str(content[1]), float(content[2]))
                 elif content[0] == "SELL":
-                    self.money += int(content[1])
+                    self.money += float(content[1])
 
     def __str__(self):
         return str(self.threadID) + " : " + str(self.money) + " : " + str(self.portfolio)
