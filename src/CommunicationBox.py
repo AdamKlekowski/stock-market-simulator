@@ -1,4 +1,5 @@
 import threading
+import pandas as pd
 
 
 class CommunicationBox:
@@ -13,6 +14,7 @@ class CommunicationBox:
             'IBM': (110, 135),
             'ABB': (10, 20)
         }
+        self.oil_prices = pd.read_csv("data/oil_prices.csv")["price"]
 
     def mark_attendance_counter(self):
         self.attendance_counter += 1

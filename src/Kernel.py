@@ -4,10 +4,10 @@ import Traders.NoisyTrader as NoisyTrader
 import Traders.PrzemekTrader as PrzemekTrader
 from Books.MarketOrderBook import MarketOrderBook
 
-NUM_NOISY_TRADER = 1000
+NUM_NOISY_TRADER = 800
 NUM_PRZEMEK_TRADER = 0
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER
-NUM_OF_ITERATIONS = 400
+NUM_OF_ITERATIONS = 300
 
 
 class Kernel:

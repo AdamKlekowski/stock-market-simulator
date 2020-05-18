@@ -13,8 +13,9 @@ class Plot:
         plt.clf()
         for name in ["IBM", "ABB"]:
             plt.plot(cb.getPriceListing(name))
+        plt.plot(cb.oil_prices[1:len(cb.getPriceListing("IBM"))])
         plt.title("Stock prices")
-        plt.legend(["IBM", "ABB"])
+        plt.legend(["IBM", "ABB", "oil"])
         plt.ylabel("Price [$]")
         plt.xlabel("Time [s]")
         plt.savefig("Plot/all_stock.png")
