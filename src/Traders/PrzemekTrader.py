@@ -1,8 +1,10 @@
 from Traders.Trader import Trader
 from Books.Order import Order
-import tensorflow as tf
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)   #to avoid tensorflow warnings
+import tensorflow as tf
 
 
 class PrzemekTrader(Trader):
