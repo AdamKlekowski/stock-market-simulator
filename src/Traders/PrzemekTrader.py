@@ -1,18 +1,19 @@
-from Trader import Trader
-from Order import Order
-import random
+from Traders.Trader import Trader
+from Books.Order import Order
 import tensorflow as tf
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+
+
 class PrzemekTrader(Trader):
     def __init__(self, threadID, cb, orderBook, delay, money):
         Trader.__init__(self, threadID, cb, orderBook, delay, money)
 
-        self.model=tf.keras.models.load_model('mod.h5')
-        self.aapl=np.genfromtxt('AAPL.csv',delimiter=',')
-        self.aapl=self.aapl[1:,1:]
-        self.scaler=MinMaxScaler(feature_range=(0,1))
-        self.scaler.fit(np.reshape(self.aapl[:,3],(-1,1)))
+        self.model = tf.keras.models.load_model('mod.h5')
+        self.aapl = np.genfromtxt('AAPL.csv', delimiter=',')
+        self.aapl = self.aapl[1:, 1:]
+        self.scaler = MinMaxScaler(feature_range=(0, 1))
+        self.scaler.fit(np.reshape(self.aapl[:, 3], (-1, 1)))
 
     def playOnStock(self):
         self.cb.lock.acquire()

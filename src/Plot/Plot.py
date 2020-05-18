@@ -10,5 +10,4 @@ class Plot:
         plt.legend(["IBM", "ABB"])
         plt.ylabel("Price [$]")
         plt.xlabel("Time [s]")
-        #plt.show()
-        plt.savefig("mygraph.png")
+        plt.savefig("Plot/all_stock.png")

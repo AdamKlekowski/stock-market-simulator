@@ -1,6 +1,4 @@
-from OrderBook import OrderBook
-import bisect
-import logging
+from Books.OrderBook import OrderBook
 
 
 class MarketOrderBook(OrderBook):

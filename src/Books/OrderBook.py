@@ -1,6 +1,3 @@
-from Order import Order
-
-
 class OrderBook:
     def __init__(self):
         self.BID = []
@@ -15,7 +12,6 @@ class OrderBook:
     def getASK(self):
         return self.ASK
 
-    # dodal Dominik
     def removeBID(self, _order):
         self.BID.remove(_order)
 
@@ -39,4 +35,3 @@ class OrderBook:
         print("BIDS:")
         for i in range(0, len(self.BID)):
             print(str(i) + ". " + str(self.BID[i].price) + "  " + str(self.BID[i].traderID))
-
