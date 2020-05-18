@@ -34,7 +34,7 @@ class Kernel:
         for t in self.threads:
             t.start()
 
-        progress = list("[__________]")
+        progress = list("[" + ("_"*100) + "]")
 
         for i in range(0, NUM_OF_ITERATIONS):
             self.cb.clear_counter()
@@ -46,7 +46,7 @@ class Kernel:
                     is_wait = False
                 time.sleep(0.001)
             self.clearOrders()
-            progress[int(i / NUM_OF_ITERATIONS * 10) + 1] = '*'
+            progress[int(i / NUM_OF_ITERATIONS * 100) + 1] = '*'
             print('\r' + "".join(progress), end='')
         print("")
         self.endSimulation()
