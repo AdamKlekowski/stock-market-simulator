@@ -25,7 +25,7 @@ class Kernel:
 
         for i in range(0, NUM_PRZEMEK_TRADER):
             portfolio = {random.choice(["IBM", "ABB"]): random.choice([20, 30])}
-            self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([2, 3, 5]), random.choice([10000, 20000]), portfolio))
+            self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([2, 3]), random.choice([10000, 20000]), portfolio))
 
         for i in range(NUM_PRZEMEK_TRADER, NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER):
             portfolio = {random.choice(["IBM", "ABB"]): random.choice([10, 20, 40])}

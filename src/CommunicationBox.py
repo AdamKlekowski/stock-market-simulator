@@ -8,8 +8,11 @@ class CommunicationBox:
         self.lock = threading.Lock()
         self.attendance_counter = 0
         self.messages = {}
-        # notowania giełdowe
-        self.stock_exchange_listing = {}
+        self.stock_exchange_listing = {}    # notowania giełdowe
+        self.min_max = {
+            'IBM': (110, 135),
+            'ABB': (100, 130)
+        }
 
     def mark_attendance_counter(self):
         self.attendance_counter += 1
