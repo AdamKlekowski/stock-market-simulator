@@ -4,17 +4,17 @@ import pandas as pd
 
 class CommunicationBox:
     def __init__(self):
-        self.time = 0
+        self.time = 3
         self.condition = threading.Condition()
         self.lock = threading.Lock()
         self.attendance_counter = 0
         self.messages = {}
         self.stock_exchange_listing = {}    # notowania giełdowe
         self.min_max = {
-            'IBM': (105, 135),
+            'IBM': (5, 135),
             'ABB': (10, 25)
         }
-        self.oil_prices = pd.read_csv("data/oil_prices.csv")["price"]
+        self.oil_prices = pd.read_csv("data/OILdroped.csv")["Close"][1000:]
 
     def mark_attendance_counter(self):
         self.attendance_counter += 1

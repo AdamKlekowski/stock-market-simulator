@@ -4,10 +4,10 @@ import Traders.NoisyTrader as NoisyTrader
 import Traders.PrzemekTrader as PrzemekTrader
 from Books.MarketOrderBook import MarketOrderBook
 
-NUM_NOISY_TRADER = 600
-NUM_PRZEMEK_TRADER = 0
+NUM_NOISY_TRADER = 300
+NUM_PRZEMEK_TRADER = 50
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER
-NUM_OF_ITERATIONS = 600
+NUM_OF_ITERATIONS = 100
 
 
 class Kernel:
@@ -19,12 +19,12 @@ class Kernel:
             "IBM": MarketOrderBook(),
             "ABB": MarketOrderBook()
         }
-        for i, j in zip([122.78, 122.78, 122.77, 122.65, 122.77], [17.76, 17.78, 17.81, 17.79, 17.81]):
+        for i, j in zip([22.94,22.74,23.33,23.55,23.09], [17.76, 17.78, 17.81, 17.79, 17.81]):
             self.cb.addAveragePrice('IBM', i)
             self.cb.addAveragePrice('ABB', j)
 
         for i in range(0, NUM_PRZEMEK_TRADER):
-            portfolio = {random.choice(["IBM", "ABB"]): random.choice([20, 30])}
+            portfolio = {'IBM': random.choice([20, 30]),'ABB': random.choice([20, 30])}
             self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([1, 2, 3]), random.choice([10000, 20000]), portfolio))
 
         for i in range(NUM_PRZEMEK_TRADER, NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER):
