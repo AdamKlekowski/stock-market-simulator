@@ -3,40 +3,41 @@ import time
 import Traders.NoisyTrader as NoisyTrader
 import Traders.PrzemekTrader as PrzemekTrader
 from Books.MarketOrderBook import MarketOrderBook
+import pandas as pd
 
-NUM_NOISY_TRADER = 400
-NUM_PRZEMEK_TRADER = 0
+NUM_NOISY_TRADER = 50
+NUM_PRZEMEK_TRADER = 3
 NUM_TREND_TRADER = 0
 NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER + NUM_TREND_TRADER
-NUM_OF_ITERATIONS = 100
+NUM_OF_ITERATIONS = 10
 
 
 class Kernel:
-    def __init__(self, cb):
+    def __init__(self, cb,ind):
         self.cb = cb
         self.threads = []
 
         self.orderBook = {
             "IBM": MarketOrderBook(),
-            "ABB": MarketOrderBook()
+            #"ABB": MarketOrderBook()
         }
-        for i, j in zip([122.78, 122.78, 122.77, 122.65, 122.77], [17.76, 17.78, 17.81, 17.79, 17.81]):
+        for i in pd.read_csv('data/AAPL.csv')['Close'][ind:ind+5].to_numpy():# zip([122.78, 122.78, 122.77, 122.65, 122.77], [17.76, 17.78, 17.81, 17.79, 17.81]):
             self.cb.addAveragePrice('IBM', i)
-            self.cb.addAveragePrice('ABB', j)
+            #self.cb.addAveragePrice('ABB', j)
 
         # Przemek trader
         for i in range(0, NUM_PRZEMEK_TRADER):
-            portfolio = {random.choice(["IBM", "ABB"]): random.choice([20, 30])}
+            portfolio = {"IBM": random.choice([20, 30])}
             self.threads.append(PrzemekTrader.PrzemekTrader(i, self.cb, self.orderBook, random.choice([2, 3, 5, 6]), random.choice([10000, 20000]), portfolio))
 
         # Noisy trader
         for i in range(NUM_PRZEMEK_TRADER, NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER):
-            portfolio = {random.choice(["IBM", "ABB"]): random.choice([10, 20, 40])}
+            portfolio = {"IBM": random.choice([10, 20, 40])}
             self.threads.append(NoisyTrader.NoisyTrader(i, self.cb, self.orderBook, random.choice([1, 2, 3, 4]), random.choice([10000, 20000, 50000]), portfolio))
 
         # Trend trader
         for i in range(NUM_PRZEMEK_TRADER+NUM_NOISY_TRADER, NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER + NUM_TREND_TRADER):
-            portfolio = {random.choice(["IBM", "ABB"]): random.choice([10, 20, 40])}
+            portfolio = {"IBM": random.choice([10, 20, 40])}
             self.threads.append(NoisyTrader.NoisyTrader(i, self.cb, self.orderBook, random.choice([2, 3, 4]), random.choice([10000, 20000, 40000]), portfolio))
 
         for t in self.threads:
@@ -128,3 +129,6 @@ class Kernel:
     def drawMarket(self):
         for name, market in self.orderBook.items():
             market.drawOrderBook()
+
+    def returnParams(self):
+        return 'NUM_NOISY_TRADER:'+str(NUM_NOISY_TRADER)+'NUM_PRZEMEK_TRADER:'+str(NUM_PRZEMEK_TRADER)+'NUM_TREND_TRADER:'+str(NUM_TREND_TRADER)+'NUM_OF_ITERATIONS:'+str(NUM_OF_ITERATIONS)

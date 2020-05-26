@@ -4,18 +4,18 @@ import matplotlib.pyplot as plt
 class Plot:
     @staticmethod
     def displayPlot(cb):
-        for name in ["IBM", "ABB"]:
+        for name in ["IBM"]:#, "ABB"]:
             Plot.oneStockOnePlot(cb, name)
         Plot.allStockOnePlot(cb)
 
     @staticmethod
     def allStockOnePlot(cb):
         plt.clf()
-        for name in ["IBM", "ABB"]:
+        for name in ["IBM"]:#, "ABB"]:
             plt.plot(cb.getPriceListing(name))
         plt.plot(cb.oil_prices[1:len(cb.getPriceListing("IBM"))])
         plt.title("Stock prices")
-        plt.legend(["IBM", "ABB", "oil"])
+        plt.legend(["IBM", "oil"])#in the middle "ABB",
         plt.ylabel("Price [$]")
         plt.xlabel("Time [s]")
         plt.savefig("Plot/all_stock.png")

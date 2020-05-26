@@ -6,7 +6,7 @@ import random
 class NoisyTrader(Trader):
     def playOnStock(self):
 
-        stock_name = random.choice(["ABB", "IBM"])
+        stock_name = "IBM"#random.choice(["ABB", "IBM"])
         quantity = random.choice([1])
         if stock_name in self.portfolio and self.portfolio[stock_name] > quantity:
             last_price = self.cb.stock_exchange_listing[stock_name][-1]
@@ -34,7 +34,7 @@ class NoisyTrader(Trader):
             finally:
                 self.cb.lock.release()
 
-        stock_name = random.choice(["ABB", "IBM"])
+        stock_name = "IBM"#random.choice(["ABB", "IBM"])
         last_price = self.cb.stock_exchange_listing[stock_name][-1]
 
         oil_diff = self.cb.oil_prices[self.cb.time + 1] - self.cb.oil_prices[self.cb.time]
