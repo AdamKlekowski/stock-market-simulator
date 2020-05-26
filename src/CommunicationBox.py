@@ -14,7 +14,7 @@ class CommunicationBox:
             'IBM': (105, 135),
             'ABB': (10, 25)
         }
-        self.oil_prices = pd.read_csv("data/oil_prices.csv")["price"]
+        self.oil_prices = pd.read_csv("data/oil_prices2.csv")["price"]
 
     def mark_attendance_counter(self):
         self.attendance_counter += 1
@@ -52,3 +52,9 @@ class CommunicationBox:
             return self.stock_exchange_listing[name]
         else:
             return None
+
+    def saveToFile(self, file_name='stock_prices.csv'):
+        f = open(file_name, "w+")
+        for record in self.stock_exchange_listing["IBM"]:
+            f.write(str(record) + "\n")
+        f.close()
