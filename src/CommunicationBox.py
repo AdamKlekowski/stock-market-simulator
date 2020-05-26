@@ -4,17 +4,17 @@ import pandas as pd
 
 class CommunicationBox:
     def __init__(self):
-        self.time = 3
+        self.time = 0
         self.condition = threading.Condition()
         self.lock = threading.Lock()
         self.attendance_counter = 0
         self.messages = {}
         self.stock_exchange_listing = {}    # notowania giełdowe
         self.min_max = {
-            'IBM': (5, 135),
+            'IBM': (105, 135),
             'ABB': (10, 25)
         }
-        self.oil_prices = pd.read_csv("data/OILdroped.csv")["Close"][1000:]
+        self.oil_prices = pd.read_csv("data/oil_prices2.csv")["price"]
 
     def mark_attendance_counter(self):
         self.attendance_counter += 1
@@ -52,3 +52,9 @@ class CommunicationBox:
             return self.stock_exchange_listing[name]
         else:
             return None
+
+    def saveToFile(self, file_name='stock_prices.csv'):
+        f = open(file_name, "w+")
+        for record in self.stock_exchange_listing["IBM"]:
+            f.write(str(record) + "\n")
+        f.close()
