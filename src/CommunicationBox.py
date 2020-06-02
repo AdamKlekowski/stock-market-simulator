@@ -11,11 +11,12 @@ class CommunicationBox:
         self.messages = {}
         self.stock_exchange_listing = {}    # notowania giełdowe
         self.min_max = {
-            'IBM': (0, 1000),
+            'IBM': (100, 150),
             #'ABB': (10, 25)
         }
         self.oil_prices = pd.read_csv("data/OILdroped.csv")["Close"][ind:].tolist()
         #self.oil_prices = pd.read_csv("data/AAPL.csv")["Close"][ind:].tolist()
+
     def mark_attendance_counter(self):
         self.attendance_counter += 1
 

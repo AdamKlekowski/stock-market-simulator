@@ -19,7 +19,7 @@ class NoisyTrader(Trader):
             elif 0 > oil_diff > -5:
                 price = last_price * random.choice([1.03, 1, 0.99])
             else:
-                price = last_price * random.choice([0.99, 0.97, 0.9, 0.85])
+                price = last_price * random.choice([0.99, 0.97, 0.9, 0.85, 0.8])
 
             min_price, max_price = self.cb.min_max[stock_name]
             if price > max_price:
@@ -45,7 +45,7 @@ class NoisyTrader(Trader):
         elif 0 > oil_diff > -5:
             price = last_price * random.choice([1.03, 1, 0.99])
         else:
-            price = last_price * random.choice([0.99, 0.97, 0.9, 0.85])
+            price = last_price * random.choice([0.99, 0.97, 0.9, 0.85, 0.80])
 
         min_price, max_price = self.cb.min_max[stock_name]
         if price > max_price:

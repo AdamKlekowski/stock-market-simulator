@@ -2,16 +2,18 @@ from Traders.Trader import Trader
 from Books.Order import Order
 import tensorflow as tf
 import numpy as np
+
+
 class PrzemekTrader(Trader):
-    def __init__(self, threadID, cb, orderBook, delay, money,portfolio):
-        Trader.__init__(self, threadID, cb, orderBook, delay, money,portfolio)
-        self.model=tf.keras.models.load_model('data/'+str(threadID)+'.h5')
-        self.wariat=np.max([0.9,np.abs(np.random.normal(0,0.1))])
+    def __init__(self, threadID, cb, orderBook, delay, money, portfolio):
+        Trader.__init__(self, threadID, cb, orderBook, delay, money, portfolio)
+        self.model = tf.keras.models.load_model('data/' + str(threadID)+'.h5')
+        self.wariat = np.max([0.9, np.abs(np.random.normal(0, 0.1))])
 
     def playOnStock(self):
         self.cb.lock.acquire()
         try:
-            self.prIBM=self.cb.stock_exchange_listing['IBM'][-1]
+            self.prIBM = self.cb.stock_exchange_listing['IBM'][-1]
             self.x=[]
             for i in range(3,0,-1):
                 self.x.append(self.cb.stock_exchange_listing['IBM'][-i])
