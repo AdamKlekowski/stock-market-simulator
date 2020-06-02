@@ -5,15 +5,15 @@ import Traders.PrzemekTrader as PrzemekTrader
 from Books.MarketOrderBook import MarketOrderBook
 import pandas as pd
 
-NUM_NOISY_TRADER = 50
-NUM_PRZEMEK_TRADER = 3
-NUM_TREND_TRADER = 0
-NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER + NUM_TREND_TRADER
-NUM_OF_ITERATIONS = 10
 
 
 class Kernel:
-    def __init__(self, cb,ind):
+    def __init__(self, cb,ind,num):
+        NUM_NOISY_TRADER = num
+        NUM_PRZEMEK_TRADER = 1200-num
+        NUM_TREND_TRADER = 0
+        NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER + NUM_TREND_TRADER
+        NUM_OF_ITERATIONS = 40
         self.cb = cb
         self.threads = []
 
@@ -129,6 +129,3 @@ class Kernel:
     def drawMarket(self):
         for name, market in self.orderBook.items():
             market.drawOrderBook()
-
-    def returnParams(self):
-        return 'NUM_NOISY_TRADER:'+str(NUM_NOISY_TRADER)+'NUM_PRZEMEK_TRADER:'+str(NUM_PRZEMEK_TRADER)+'NUM_TREND_TRADER:'+str(NUM_TREND_TRADER)+'NUM_OF_ITERATIONS:'+str(NUM_OF_ITERATIONS)
