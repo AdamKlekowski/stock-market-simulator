@@ -11,12 +11,11 @@ class CommunicationBox:
         self.messages = {}
         self.stock_exchange_listing = {}    # notowania giełdowe
         self.min_max = {
-            'IBM': (100, 150),
+            'IBM': (0, 1000),
             #'ABB': (10, 25)
         }
         self.oil_prices = pd.read_csv("data/OILdroped.csv")["Close"][ind:].tolist()
-        #self.oil_prices = pd.read_csv("data/AAPL.csv")["Close"][ind:].tolist()
-
+        self.aapl_prices = pd.read_csv("data/AAPL.csv")["Close"][ind:].tolist()
     def mark_attendance_counter(self):
         self.attendance_counter += 1
 
@@ -56,7 +55,6 @@ class CommunicationBox:
 
     def saveToFile(self, kr, file_name='stock_prices.csv'):
         f = open(file_name, "w+")
-        f.write(str(kr.returnParams())+'\n')
-        for record in self.stock_exchange_listing["IBM"]:
-            f.write(str(record) + "\n")
+        for record, o, a in zip(self.stock_exchange_listing["IBM"],self.oil_prices,self.aapl_prices):
+            f.write(str(record)+', '+str(o)+', '+str(a)+"\n")
         f.close()
