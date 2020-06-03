@@ -11,7 +11,7 @@ class ModelChecker():
         o=np.array(cb.oil_prices[5:45])
         o=o.reshape(-1)
         corrOilToAppl=np.corrcoef(x,o)
-        resFile.write(str(np.abs(corrPredToReal[0,1]))+', '+str(np.abs(corrOilToAppl[0,1]))+', '+str(comm)+', '+str(1200-comm)+', '+str(strind)+"\n")
+        resFile.write(str(np.abs(corrPredToReal[0,1]))+', '+str(np.abs(corrOilToAppl[0,1]))+', '+str(600-comm)+', '+str(comm)+', '+str(strind)+"\n")
         """print()
         plt.clf()
         plt.plot(x)

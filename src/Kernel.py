@@ -9,8 +9,8 @@ import pandas as pd
 
 class Kernel:
     def __init__(self, cb,ind,num):
-        NUM_NOISY_TRADER = num
-        NUM_PRZEMEK_TRADER = 1200-num
+        NUM_NOISY_TRADER = 600-num
+        NUM_PRZEMEK_TRADER = num
         NUM_TREND_TRADER = 0
         NUM_OF_AGENTS = NUM_NOISY_TRADER + NUM_PRZEMEK_TRADER + NUM_TREND_TRADER
         NUM_OF_ITERATIONS = 40
