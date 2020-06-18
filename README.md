@@ -1,12 +1,11 @@
+![Logo](logo.png)
+
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Documentation](#documentation)
 * [License](#license)
 * [Authors](#authors)
-
-![Logo](logo.png)
 
 ## General info
 
